@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- use viewport-fit=cover so safe-area-inset works on phones with notches -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Happy Birthday — For Her</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#ff9a9e; /* gradient colors */
+      --bg2:#fecfef;
+      --card:#fff;
+      --accent:#ff6b81;
+      --soft:#fff6f8;
+
+      /* profile sizing variables */
+      --profile-size-desktop: 140px;
+      --profile-size-mobile-min: 84px;
+      --profile-size-mobile-max: 120px;
+    }
+    *{box-sizing:border-box}
+    /* ---------------------- Desktop / Default styles (kept as-is) ---------------------- */
+    body{
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    }
+
+    /* container */
+    .wrap{
+      width:94%;
+      max-width:980px;
+      margin:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+      border-radius:18px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.12);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:1fr 420px;
+      gap:0;
+    }
+    /* responsive: stack on small screens */
+    @media (max-width:880px){
+      .wrap{grid-template-columns:1fr;}
+      .right{order:-1}
+    }
+
+    .left{padding:36px; display:flex; flex-direction:column; gap:16px; align-items:flex-start}
+    .right{background:linear-gradient(180deg,#fff0f6,#fff7fb); padding:18px; display:flex; align-items:center; justify-content:center}
+
+    h1{font-size:clamp(20px,3.4vw,36px); margin:0; color:#342; letter-spacing:-0.5px}
+    p.lead{margin:0; color:#5a4; font-weight:500}
+
+    .card{background:var(--card); border-radius:12px; padding:18px; width:100%; box-shadow:0 6px 18px rgba(0,0,0,0.06);}
+
+    /* heart + message */
+    .hero{display:flex; gap:18px; align-items:center}
+    .heart{width:110px; height:110px; display:flex; align-items:center; justify-content:center; position:relative}
+    .heart svg{width:100%; height:100%; display:block; transform-origin:center center; animation:beat 1.2s infinite ease-in-out}
+    @keyframes beat{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+    .message{flex:1}
+    .message p{margin:8px 0 0 0; font-size:clamp(14px,2.2vw,18px); color:#444}
+
+    .fromline{font-size:13px; color:#777; margin-top:10px}
+
+    /* balloons */
+    .balloon-wrap{position:relative; height:220px}
+    .balloon{position:absolute; bottom:0; width:72px; height:96px; border-radius:72% 72% 80% 80%; opacity:0.95; transform-origin:center bottom;}
+    .string{position:absolute; bottom:-68px; left:50%; width:2px; transform:translateX(-50%); height:68px; background:rgba(0,0,0,0.08)}
+    @keyframes floaty{0%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-24px) rotate(4deg)}100%{transform:translateY(0) rotate(-3deg)}}
+    .b1{left:8%; animation:floaty 6s ease-in-out infinite; background:linear-gradient(180deg,#ffd1dc,#ff6b81)}
+    .b2{left:28%; animation:floaty 5.3s ease-in-out infinite; background:linear-gradient(180deg,#ffd6a5,#ff9f6b); width:62px; height:84px}
+    .b3{left:56%; animation:floaty 6.8s ease-in-out infinite; background:linear-gradient(180deg,#cfe9ff,#7fb3ff); width:82px}
+    .b4{left:78%; animation:floaty 5.7s ease-in-out infinite; background:linear-gradient(180deg,#e7d7ff,#c295ff)}
+
+    /* playground on right */
+    .preview{width:100%; max-width:380px; height:100%; display:flex; align-items:center; justify-content:center; position:relative}
+    .preview-card{width:320px; border-radius:14px; padding:18px; background:linear-gradient(180deg,#fff,#fff6f9); box-shadow:0 10px 30px rgba(0,0,0,0.08); text-align:center}
+    .preview-card h2{margin:0 0 8px 0}
+    .preview-card p{margin:0 0 12px 0}
+    .small{font-size:13px; color:#666}
+
+    /* responsive preview sizing */
+    @media (max-width:480px){
+      .preview-card{width:92%; padding:14px}
+      .balloon-wrap{height:140px}
+      .heart{width:86px;height:86px}
+    }
+
+    /* footer note */
+    .note{font-size:12px; color:#666}
+
+    /* confetti canvas covers whole right area */
+    canvas#confetti{position:absolute; inset:0; pointer-events:none}
+
+    /* glow effect keyframes kept */
+    @keyframes glowPulse{
+      0%{
+        box-shadow:
+          0 0 8px rgba(255,107,129,0.45),
+          0 0 14px rgba(255,107,129,0.35),
+          0 0 22px rgba(255,107,129,0.25);
+      }
+      50%{
+        box-shadow:
+          0 0 14px rgba(255,107,129,0.75),
+          0 0 26px rgba(255,107,129,0.45),
+          0 0 38px rgba(255,107,129,0.35);
+      }
+      100%{
+        box-shadow:
+          0 0 8px rgba(255,107,129,0.45),
+          0 0 14px rgba(255,107,129,0.35),
+          0 0 22px rgba(255,107,129,0.25);
+      }
+    }
+
+    /* ---------------------- PROFILE IMAGE: centered & fixed size (desktop) ---------- */
+    .glow-frame{
+      width: var(--profile-size-desktop);
+      height: var(--profile-size-desktop);
+      min-width: var(--profile-size-desktop);
+      min-height: var(--profile-size-desktop);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;            /* keep the image cropped to a circle */
+      border-radius: 50%;
+      position: relative;
+      margin: 0 auto;              /* center within the preview-card */
+      animation: glowPulse 2.4s ease-in-out infinite;
+      box-shadow:0 0 14px rgba(255,107,129,0.55);
+    }
+
+    /* Ensure the image fills the glow-frame without distortion */
+    .glow-frame img,
+    #profilePic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;    /* preserves aspect ratio while cropping */
+      display: block;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+
+    /* optional decorative ring (uncomment if desired)
+    .glow-frame::after{
+      content: "";
+      position:absolute;
+      inset: 0;
+      border-radius:50%;
+      padding:4px;
+      box-shadow: inset 0 0 0 4px rgba(255,255,255,0.6);
+      pointer-events:none;
+    }
+    */
+
+    /* ---------------------- MOBILE-SPECIFIC OVERRIDES ---------------------- */
+    /* these come from your mobile file — applied only on small screens */
+    @media (max-width: 880px) {
+      /* make page non-scrollable on mobile & respect safe area */
+      html,body{height:100%}
+      body{
+        height:100vh;
+        overflow:hidden;
+        padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+
+      /* container fills viewport and removes outer margin */
+      .wrap{
+        width:100%;
+        height:100vh;
+        margin:0;
+        background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+        border-radius:0;
+        grid-template-columns: 1fr; /* single column on mobile */
+      }
+
+      .left{
+        padding: clamp(12px,2.6vw,28px);
+        gap:12px;
+        overflow:hidden;
+        min-height:0;
+      }
+      .right{
+        padding: clamp(10px,1.8vw,18px);
+        overflow:hidden;
+      }
+
+      /* scale down text and images for phones */
+      h1{
+        font-size:clamp(18px,3.4vw,28px);
+        line-height:1.08;
+        word-break:break-word;
+      }
+      p.lead{ font-size:clamp(13px,2.2vw,16px); }
+
+      .card{
+        padding: clamp(12px,2.8vw,18px);
+        border-radius:12px;
+        overflow:hidden;
+      }
+
+      .hero{ gap:12px; }
+      .heart{
+        width:clamp(64px,12vw,110px);
+        height:clamp(64px,12vw,110px);
+      }
+      .message p{ font-size:clamp(13px,2.2vw,16px); }
+
+      .fromline{ font-size:clamp(11px,2vw,13px); margin-top:8px }
+
+      .balloon-wrap{
+        position:relative;
+        height:clamp(110px,18vh,220px);
+        width:100%;
+        overflow:hidden;
+      }
+      .balloon{
+        bottom:0;
+        width:clamp(48px,11vw,82px);
+        height:clamp(64px,13vw,96px);
+        border-radius:72% 72% 80% 80%;
+      }
+      .string{
+        bottom:calc(-1 * clamp(56px,11vw,68px));
+        height:calc(clamp(56px,11vw,68px));
+      }
+
+      .preview{ padding:6px; min-height:0; }
+      .preview-card{
+        width:100%;
+        max-width:340px;
+        padding:clamp(12px,2.6vw,18px);
+        border-radius:14px;
+      }
+      .preview-card h2{ font-size:clamp(16px,2.6vw,20px) }
+      .preview-card p{ font-size:clamp(13px,2.2vw,15px) }
+      .small{ font-size:clamp(11px,1.9vw,13px) }
+
+      /* MOBILE OVERRIDE for glow-frame: use clamp-based sizing, keep same behavior */
+      .glow-frame{
+        width: clamp(var(--profile-size-mobile-min), 18vw, var(--profile-size-mobile-max));
+        height: clamp(var(--profile-size-mobile-min), 18vw, var(--profile-size-mobile-max));
+        min-width: 0;
+        min-height: 0;
+        margin: 0 auto;
+        border-width:4px;
+      }
+
+      .glow-frame img,
+      #profilePic {
+        /* keep object-fit behavior on mobile as well */
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .glow-frame{
+        /* keep animation on mobile */
+        animation: glowPulse 2.4s ease-in-out infinite;
+      }
+
+      /* canvas sizing for mobile safe fit */
+      canvas#confetti{
+        width:100%;
+        height:100%;
+        display:block;
+      }
+    }
+
+    /* ensure images don't overflow when scaled */
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <div class="left">
+      <div class="card">
+        <div class="hero">
+          <div class="heart" aria-hidden="true">
+            <!-- improved heart SVG (smoother path + gradient) -->
+            <svg viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="g" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#ff6b81"/>
+                  <stop offset="100%" stop-color="#ff9ab8"/>
+                </linearGradient>
+              </defs>
+              <path d="M16 27s-9-6.1-12.1-9.6C-0.5 12.8 3.3 5 8.9 5c2.9 0 4.9 1.6 7.1 4.2C17.2 6.6 19.2 5 22.1 5c5.6 0 9.4 7.8 4.9 12.4C25 20.9 16 27 16 27z" fill="url(#g)"/>
+            </svg>
+          </div>
+          <div class="message">
+            <h1 id="title">Happy Birthday, <span id="name">My Love</span> ❤️</h1>
+            <p class="lead" id="subtitle">Another year more beautiful — here's to you and to us.</p>
+            <p class="fromline">With all my love — <strong id="from">Your Name</strong></p>
+          </div>
+        </div>
+
+        <div class="balloon-wrap" aria-hidden="true">
+          <div class="balloon b1"><div class="string"></div></div>
+          <div class="balloon b2"><div class="string"></div></div>
+          <div class="balloon b3"><div class="string"></div></div>
+          <div class="balloon b4"><div class="string"></div></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="right">
+      <div class="preview" aria-hidden="false">
+        <canvas id="confetti" aria-hidden="true"></canvas>
+        <div class="preview-card" id="previewCard">
+          <h2 id="pvTitle">Happy Birthday!</h2>
+
+          <div class="glow-frame" aria-hidden="true">
+            <img id="profilePic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5AxbY7N5WzSUL7ke405Fl5SyRVM2KXAccxw&s" alt="Photo">
+          </div>
+          <br>
+          <p id="pvSub">Wishing you a day filled with love and glitter ✨</p>
+          <div class="small">Sending all my love 💌</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // original JS unchanged except a slightly better resize that works for both desktop & mobile
+  const DEFAULT = { to: 'My Love', from: 'Your Name', message: "Another year more beautiful — here's to you and to us." };
+
+  const nameEl = document.getElementById('name');
+  const fromEl = document.getElementById('from');
+  const subtitle = document.getElementById('subtitle');
+  const pvTitle = document.getElementById('pvTitle');
+  const pvSub = document.getElementById('pvSub');
+
+  if(nameEl) nameEl.textContent = DEFAULT.to;
+  if(fromEl) fromEl.textContent = DEFAULT.from;
+  if(subtitle) subtitle.textContent = DEFAULT.message;
+  if(pvTitle) pvTitle.textContent = `Happy Birthday, ${DEFAULT.to}!`;
+  if(pvSub) pvSub.textContent = DEFAULT.message;
+
+  const canvas = document.getElementById('confetti');
+  let ctx = null;
+  if(canvas) ctx = canvas.getContext('2d');
+  let W=300, H=150;
+
+  // Combined resize: works well for desktop and mobile (uses parent rect + devicePixelRatio)
+  function resize(){
+    if(!canvas) return;
+    const parent = canvas.parentElement || canvas;
+    const r = parent.getBoundingClientRect();
+    W = Math.max(1, Math.floor(r.width));
+    H = Math.max(1, Math.floor(r.height));
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    if(ctx) ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  window.addEventListener('resize', debounce(resize, 120));
+  window.addEventListener('orientationchange', () => setTimeout(resize,150));
+  resize();
+
+  function rand(min,max){ return Math.random()*(max-min)+min }
+  function makeConfetti(n=80){
+    const pieces = [];
+    for(let i=0;i<n;i++) pieces.push({x:rand(0,W), y:rand(-H,0), vx:rand(-0.8,0.8), vy:rand(1,4), r:rand(6,10), c:["#ff6b81","#ffd6a5","#cfe9ff","#c295ff"][Math.floor(rand(0,4))], rot:rand(0,360)});
+    return pieces;
+  }
+  let confettiPieces = [];
+  let anim = null;
+  function startConfetti(){ if(!ctx) return; cancelAnimationFrame(anim); resize(); confettiPieces = makeConfetti(Math.floor(Math.max(40, (W*H)/5000))); anim = requestAnimationFrame(loop); }
+  function stopConfetti(){ cancelAnimationFrame(anim); anim = null; }
+  function loop(){ if(!ctx) return; ctx.clearRect(0,0,W,H); for(const p of confettiPieces){ p.x += p.vx; p.y += p.vy; p.rot += 6; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180); ctx.fillStyle = p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6); ctx.restore(); if(p.y>H+20){ p.y=-20; p.x=rand(0,W); } } anim = requestAnimationFrame(loop); }
+
+  function pulseHeart(){ const heart = document.querySelector('.heart svg'); if(!heart) return; heart.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}], {duration:700, iterations:1}); }
+
+  function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
+
+  function autoPlaySoon(delay=120){
+    try{ setTimeout(()=>{ startConfetti(); pulseHeart(); setTimeout(pulseHeart,700); }, delay); }catch(e){/*ignore*/ }
+  }
+
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){
+    autoPlaySoon(140);
+  } else {
+    document.addEventListener('DOMContentLoaded', ()=> autoPlaySoon(140));
+  }
+  window.addEventListener('pageshow', ()=> autoPlaySoon(140));
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) autoPlaySoon(140); });
+
+  function resumeOnInteraction(){ startConfetti(); pulseHeart(); window.removeEventListener('pointerdown', resumeOnInteraction); window.removeEventListener('keydown', resumeOnInteraction); }
+  window.addEventListener('pointerdown', resumeOnInteraction, {passive:true});
+  window.addEventListener('keydown', resumeOnInteraction, {passive:true});
+
+  setTimeout(resize,200);
+</script>
+
+</body>
+</html>
